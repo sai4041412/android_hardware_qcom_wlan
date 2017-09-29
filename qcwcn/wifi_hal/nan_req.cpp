@@ -138,11 +138,7 @@ int NanCommand::putNanEnable(transaction_id id, const NanEnableRequest *pReq)
         (
            /* Always include cfg discovery indication TLV */
            SIZEOF_TLV_HDR + sizeof(u32) \
-        ) + \
-        (
-          pReq->config_subscribe_sid_beacon ? (SIZEOF_TLV_HDR + \
-          sizeof(pReq->subscribe_sid_beacon_val)) : 0 \
-        ) ;
+        );
     pNanEnableReqMsg pFwReq = (pNanEnableReqMsg)malloc(message_len);
     if (pFwReq == NULL) {
         cleanup();
@@ -298,12 +294,6 @@ int NanCommand::putNanEnable(transaction_id id, const NanEnableRequest *pReq)
                   sizeof(u32),
                   (const u8*)&config_discovery_indications, tlvs);
 
-    if (pReq->config_subscribe_sid_beacon) {
-        tlvs = addTlv(NAN_TLV_TYPE_SUBSCRIBE_SID_BEACON,
-                      sizeof(pReq->subscribe_sid_beacon_val),
-                      (const u8*)&pReq->subscribe_sid_beacon_val, tlvs);
-    }
-
     mVendorData = (char*)pFwReq;
     mDataLen = message_len;
 
@@ -415,10 +405,6 @@ int NanCommand::putNanConfig(transaction_id id, const NanConfigRequest *pReq)
         (
            pReq->config_disc_mac_addr_randomization ? (SIZEOF_TLV_HDR + \
            sizeof(u32)) : 0 \
-        ) + \
-        (
-          pReq->config_subscribe_sid_beacon ? (SIZEOF_TLV_HDR + \
-          sizeof(pReq->subscribe_sid_beacon_val)) : 0 \
         ) + \
         (
            /* Always include cfg discovery indication TLV */
@@ -537,11 +523,6 @@ int NanCommand::putNanConfig(transaction_id id, const NanConfigRequest *pReq)
         tlvs = addTlv(NAN_TLV_TYPE_DISC_MAC_ADDR_RANDOM_INTERVAL,
                       sizeof(u32),
                       (const u8*)&pReq->disc_mac_addr_rand_interval_sec, tlvs);
-    }
-    if (pReq->config_subscribe_sid_beacon) {
-        tlvs = addTlv(NAN_TLV_TYPE_SUBSCRIBE_SID_BEACON,
-                      sizeof(pReq->subscribe_sid_beacon_val),
-                      (const u8*)&pReq->subscribe_sid_beacon_val, tlvs);
     }
 
     u32 config_discovery_indications;
