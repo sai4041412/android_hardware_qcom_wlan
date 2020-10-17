@@ -4,6 +4,8 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+LOCAL_CFLAGS += -Wall -Wextra -Wno-error -Wno-implicit-function-declaration
+
 ifeq ($(PRODUCT_VENDOR_MOVE_ENABLED),true)
 LOCAL_VENDOR_MODULE := true
 endif
